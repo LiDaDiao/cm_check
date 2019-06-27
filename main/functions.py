@@ -103,19 +103,15 @@ def fit_model(model, train_dataset, train_labels):
 def predict(model, dataset, labels):
     test_predictions = model.predict(dataset).flatten()
     plt.scatter(labels, test_predictions)
-    plt.xlabel('True Values [blockcnt]')
-    plt.ylabel('Predictions [blockcnt]')
-    plt.axis('equal')
-    plt.axis('square')
+    # x轴的名字
+    plt.xlabel('true[blockcnt]')
+    # y轴的名字
+    plt.ylabel('predict[blockcnt]')
+    # plt.axis('equal')
+    # plt.axis('square')
     plt.xlim([0, plt.xlim()[1]])
     plt.ylim([0, plt.ylim()[1]])
-    _ = plt.plot([-100, 100], [-100, 100])
-
-    # 查看错误
-    error = test_predictions - labels
-    plt.hist(error, bins=25)
-    plt.xlabel("Prediction Error [blockcnt]")
-    _ = plt.ylabel("Count")
+    # _ = plt.plot([-100, 100], [-100, 100])
 
     plt.show()
 

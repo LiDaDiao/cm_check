@@ -27,7 +27,7 @@ def run():
     # data_set_140004_130001.pop('blockcnt')
     # data_set_140004_130001.pop('blocktime')
 
-    #10%数据作为测试数据，其他数据为训练数据
+    #10%数据作为测试数据，其他数据为训练数据blockcnt
     train_dataset_140004_130001 = data_set_140004_130001.sample(frac=0.9, random_state=0)
     # print(train_dataset_140004_130001)
     test_dataset_140004_130001 = data_set_140004_130001.drop(train_dataset_140004_130001.index)
@@ -73,7 +73,16 @@ def run():
     # hist['epoch'] = history.epoch
     # hist.tail()
     # print(hist)
-    loss, mae, mse = model.evaluate(test_dataset_140004_130001, test_labels_140004_130001, verbose=0)
+    # print(test_labels_140004_130001)
+    # test_dataset_140004_130001 = test_dataset_140004_130001[5:10]
+    # print('test_dataset_140004_130001 =')
+    # print(test_dataset_140004_130001)
+    #
+    # test_labels_140004_130001 = test_labels_140004_130001[5:10]
+    # print('test_labels_140004_130001 =')
+    # print(test_labels_140004_130001)
+
+    # loss, mae, mse = model.evaluate(test_dataset_140004_130001, test_labels_140004_130001, verbose=0)
     # print("Testing set loss {} blokcnt".format(loss))
     # print("Testing set mae {} blokcnt".format(mae))
     # print("Testing set mse {} blokcnt".format(mse))

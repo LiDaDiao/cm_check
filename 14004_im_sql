@@ -1,0 +1,26 @@
+select blockcnt,blocktime,connstate,nettype,netchangedelay,netchangetype,netchangecount,
+       parsedelay,connectdelay,senddelay,recvdelay,fulldelay,nwsb,nmsb
+from
+(
+select xaid,uptime,liveid2,playtime,firsttime,quittime,playendtime,serverip,vrecvsize,arecvsize,vrecvpack,arecvpack,blockcnt,blocktime,
+       streamname,dnstime,connecttime,firstpkgtime, blockquittime, rtmpfirstpkg, eagain, status,video_width
+from
+(
+select  xaid,uptime2 uptime,liveid2,playtime,firsttime,quittime,playendtime,serverip,vrecvsize,arecvsize,vrecvpack,arecvpack,blockcnt,blocktime,
+       streamname,dnstime,connecttime,firstpkgtime,col['blockquittime'] blockquittime,col['rtmpfirstpkg'] rtmpfirstpkg,col['eagain'] eagain,col['status'] status,col['video_width'] video_width,
+       row_number()over(partition by xaid order by uptime2) rn
+from kewl_140004
+where dt=20190618 and  `time`>='2019-06-18 01:00:00' and `time`<='2019-06-18 01:30:00' and prodid=0
+)a1
+ where rn=1
+ limit 10000
+ )a
+join
+(
+select  xaid,`timestamp` uptime,conntype,connstate,nettype,netchangecount,netchangedelay,netchangetype,host,dnsip,port,parsedelay,
+       connectdelay,senddelay,recvdelay,fulldelay,reportnumber,col['localdns'] localdns,col['nwsb'] nwsb,col['nmsb'] nmsb
+from kewl_im_tcp_connect_time2
+where dt=20190618 and `time`>='2019-06-18 00:30:00' and `time`<='2019-06-18 01:00:00'
+)c
+on a.xaid=c.xaid
+where a.uptime-c.uptime<600000 and a.uptime-c.uptime>0 limit 10000000;

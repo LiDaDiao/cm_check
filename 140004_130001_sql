@@ -1,0 +1,26 @@
+select blockcnt,blocktime,b.status,alltime,contime,pinggoogle,pingtime,b.dnstime,tlstime
+from
+(
+select xaid,uptime,liveid2,playtime,firsttime,quittime,playendtime,serverip,vrecvsize,arecvsize,vrecvpack,arecvpack,blockcnt,blocktime,
+       streamname,dnstime,connecttime,firstpkgtime, blockquittime, rtmpfirstpkg, eagain, status,video_width
+from
+(
+select  xaid,uptime2 uptime,liveid2,playtime,firsttime,quittime,playendtime,serverip,vrecvsize,arecvsize,vrecvpack,arecvpack,blockcnt,blocktime,
+       streamname,dnstime,connecttime,firstpkgtime,col['blockquittime'] blockquittime,col['rtmpfirstpkg'] rtmpfirstpkg,col['eagain'] eagain,col['status'] status,col['video_width'] video_width,
+       row_number()over(partition by xaid order by uptime2) rn
+from kewl_140004
+where dt=20190618 and  `time`>='2019-06-18 01:00:00' and `time`<='2019-06-18 01:30:00' and prodid=0
+)a1
+ where rn=1
+ limit 10000
+ )a
+join
+(
+select  xaid,uptime2 uptime,path,status,reason,downtime,downsize,alltime,contime,col['isforeground'] isforeground,col['dnsip'] dnsip,col['pinggoogle'] pinggoogle,
+       col['pingtime'] pingtime,col['networkchange'] networkchange,col['reqid'] reqid,col['retry'] retry,col['ipfrom'] ipfrom,col['protocol'] protocol,
+    col['step'] step,col['dnstime'] dnstime,col['tlstime'] tlstime
+from kewl_130001
+where dt=20190618 and `time`>='2019-06-18 00:30:00' and `time`<='2019-06-18 01:00:00'
+)b
+on a.xaid=b.xaid
+where a.uptime-b.uptime<600000 and a.uptime-b.uptime>0 limit 10000000;
